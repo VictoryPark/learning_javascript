@@ -1,0 +1,8 @@
+*.log
+
+node_modules
+
+.Ds_Store
+
+*.temp
+*~
