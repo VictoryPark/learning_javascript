@@ -1,3 +1,4 @@
+"use strict"
 let globalFunc;
 {
   let blockVar = 'a';
