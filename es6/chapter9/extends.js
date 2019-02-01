@@ -29,4 +29,4 @@ c.addPassenger("Cameron")
 console.log(c.passengers);
 
 //console.log(v.deployAirbags()); //error
-console.log(c.deployAirbags()); //BWOOSH!
+c.deployAirbags(); //BWOOSH!    //console.log() 로 찍으면 return이 없어서 undefined 뜬다..

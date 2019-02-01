@@ -49,7 +49,7 @@ const Car = (function() {
       carProps.set(this, {userGear: this._userGears[0]});
     } //생성자
 
-    get userGear(){ return carProps.get(this).userGear};
+    get userGear() { return carProps.get(this).userGear};
     set userGear(value) {
       if(this._userGears.indexOf(value) < 0)
         throw new Error(`Invalid gear: ${value}`);
@@ -62,6 +62,14 @@ const Car = (function() {
 
   return Car;
 })();
+
+const car1 = new Car();
+console.log(car1.userGear);
+console.log(car1.shift('R'));
+console.log(car1.userGear);
+
+car1.shift('X');    //에러 발생..Invalid gear: 'X'
+car1.userGear = 'X'; //에러 발생..Invalid gear: 'X'
 
 //ES5 에서는 원래 클래스는 함수로 선언되었음..
 // function Car(make, model) {
