@@ -83,6 +83,7 @@ function launch() {
 const c = new Countdown(5)
 .on('tick', i => console.log(i + '...'));
 
-c.go().then(launch).then(function(msg){console.log(msg)}).catch(function(err){
+c.go().then(launch).then(function(msg){console.log(msg)})
+.catch(function(err){
   console.log("Houston, we have a problem....")
 })
