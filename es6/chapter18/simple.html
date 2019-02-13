@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    .callout {
+      border : solid 1px #ff0080;
+      margin : 2px 4px;
+      padding : 2px 6px;
+    }
+    .code {
+      background: #ccc;
+      margin : 1px 2px;
+      padding : 1px 4px;
+      font-family: monospace;
+    }
+    .highlight {
+      background: #ff0;
+      font-style: italic;
+    }
+  </style>
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+</head>
+<body>
+  <header>
+    <h1>Simple HTML</h1>
+  </header>
+  <div id="content">
+    <p>This is a <i>simple</i> HTML file</p>
+    <div class="callout">
+      <p>This is as fancy as we'll get!</p>
+    </div>
+    <p>IDs (such as <span class="code">#content</span>)
+      are unique (there can only be one per page).</p>
+    <p>Classes (such as <span class="code">.callout</span>)
+      can be used on many elements.</p>
+    <div id="callouts" class="callout fancy">
+      <p>A single HTML element can have multiple classes.</p>
+    </div>
+  </div>
+  <button data-action="highlight" data-containing="unique">
+    Highlight paragraphs containing "unique"
+  </button>
+  <button data-action="removeHighlights">
+    Remove highlights
+  </button>
+  <div class="serverInfo">
+    Server is running on <span data-replace="platform">???</span>
+    with Node <span data-replace="nodeVersion">???</span>. It has
+    been up for <span data-replace="uptime">???</span> seconds.
+  </div>
+  <script>
+    function printDOM(node, prefix) {
+      console.log(prefix + node.nodeName);
+      for(let i = 0; i<node.childNodes.length; i++) {
+        printDOM(node.childNodes[i], prefix+ '\t');
+      }
+    }
+    //printDOM(document, '');
+
+    const para1 = document.getElementsByTagName('p')[0];
+    console.log(para1.textContent);
+    console.log(para1.innerHTML);
+    //para1.textContent = "Modified HTML file";
+    para1.innerHTML = "Modified HTML file";
+
+    const p1 = document.createElement('p');
+    const p2 = document.createElement('p');
+
+    p1.textContent = "I was created dynamically!";
+    p2.textContent = "I was also created by dynemically!"
+
+    const parent = document.getElementById('content');
+    const firstChild = parent.childNodes[0];
+
+    parent.insertBefore(p1, firstChild);
+    parent.appendChild(p2);
+
+    function highlightParas(containing) {
+      if(typeof containing === 'string') {
+        //매개변수로 들어온 containing 앞 뒤로 아무것도 없는 것을 대소문자 구분 없이 찾는다..
+        containing = new RegExp(`\\b${containing}\\b`, 'i');
+        //console.log(containing);
+      }
+      const paras = document.getElementsByTagName('p');
+      //console.log(paras);
+      for(let p of paras) {
+        //unique로 들어온 매개변수를 포함하고 있는 innerText 가 있다면 그것의 p 태그 class에 highlight 추가..
+        if(!containing.test(p.textContent)) continue;
+        //console.log(p.classList)
+        p.classList.add('highlight')
+      }
+    }
+
+    //highlightParas('unique');
+
+    function removeParaHighlights() {
+      const paras = document.querySelectorAll('p.highlight');
+      for(let p of prars) {
+        p.classList.remove('highlight');
+      }
+    }
+
+    const highlightActions = document.querySelectorAll('[data-action="highlight"]');
+    console.log(highlightActions[0].dataset);
+    //highlightActions[0].dataset.containing = "giraffe";
+    highlightActions[0].dataset.caseSensitive = "true";
+    console.log(highlightActions[0].dataset)    //caseSensitive 추가된것 볼 수 있음..
+
+    for(let a of highlightActions) {
+      a.addEventListener('click', evt =>{
+        evt.preventDefault();
+        highlightParas(a.dataset.containing);
+      })
+    } // for..
+
+    const removeHighlightActions =
+          document.querySelectorAll('[data-action="removehighlights"]');
+    for(let a of removeHighlightActions) {
+      a.addEventListener('click', evt => {
+        evt.preventDefault();
+        console.log("zz")
+        removeParaHighlights();
+      })
+    }
+
+    function refreshServerInfo() {
+      const req = new XMLHttpRequest();
+      req.addEventListener('load', function() {
+        //TODO 값 삽입은 나중에..
+        console.log(this.responseText);
+        //문자열을 객체로 바꾼다..
+        const data = JSON.parse(this.responseText);
+
+        //이 예제에서는 클래스가 serverInfo 인 div 텍스트만 교체한다.
+        const serverInfo = document.querySelector('.serverInfo');
+
+        //서버에서 반환한 객체를 키 기준으로 순회한다.
+        Object.keys(data).forEach(p => {
+          //텍스트를 교체할 요소를 찾는다..
+          const replacements =
+              serverInfo.querySelectorAll(`[data-replace="${p}"]`);
+          //서버에서 받은 값으로 텍스트를 교체..
+          for(let r of replacements) {
+            r.textContent = data[p];
+          }
+        })
+      })
+      req.open('GET', 'http://localhost:7070', true);
+      req.send();
+    }
+
+    refreshServerInfo();
+  </script>
+  <script>    //제이쿼리...
+  $(function (){
+    const $paras = $('p');
+    console.log($paras.length);
+   // $paras.text("ALL PARAGRAPHS REPLACED")
+   //$paras.after('<hr>').before('<hr>')
+  })
+  
+  </script>
+</body>
+</html>

@@ -6,6 +6,8 @@ console.log(matches); //[ '9', '9', '1', '9', '8' ]
 
 const m1 = beer99.match(/[0123456789]/g); //위의 예제를 문자셋으로 묶은 것..
 const m2 = beer99.match(/[0-9]/g);  //더 짧게..
+//352페이지..
+const match = beer99.match(/[0-9][0-9][0-9]|[0-9][0-9]|[0-9]/g);
 
 console.log(m1)
 console.log(m2)
@@ -13,7 +15,7 @@ console.log(m2)
 let match = beer99.match(/[\-0-9a-z.]/ig);  //. 이랑 -도 포함한 것 다 뽑아낸다.
 match = beer99.match(/[a-z.0-9\-]/ig);    //위에꺼랑 순서 바껴도 된다. 
 match = beer99.match(/[^\-0-9a-z.]/);
-console.log(match)
+console.log(match);
 
 const stuff = 
   'high:   9\n' +
